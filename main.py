@@ -28,13 +28,20 @@ def handle_request(window_name):
     else:
         enter = False
 
+    if 'suppress_history' in request.form:
+        suppress_history = int(request.form['suppress_history'])
+    else:
+        suppress_history = False
+
+    pane = window.attached_pane
+    pane.send_keys(request.form['keys'],
+                   enter=enter,
+                   suppress_history=suppress_history)
+
     if 'kill' in request.form:
         if int(request.form['kill']):
             window.kill_window()
 
-    pane = window.attached_pane
-    pane.send_keys(request.form['keys'],
-                   enter=enter)
     return '200'
 
 
