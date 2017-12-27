@@ -80,6 +80,7 @@ def command_line():
 
     try:
         server = libtmux.Server()
+        global session
         session = server.new_session(session_name)
         window = session.new_window(window_name)
         session.kill_window('@0')

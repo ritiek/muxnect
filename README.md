@@ -45,7 +45,9 @@ Now let's send a POST request using python to our newly created web-server:
 import requests
 
 url = 'http://localhost:6060/muxnect/hello_world'
-requests.post(url, data={'keys': 'print("Hello World!")'})
+keys = 'print("Hello World!")'
+# send return key after it is done sending `keys`
+requests.post(url, data={'keys':keys, 'enter':True})
 ```
 
 There's our `Hello World!` on the python console we just launched.
