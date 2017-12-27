@@ -1,6 +1,8 @@
 import libtmux
+from libtmux.exc import *
 from flask import Flask, request
 import sys
+import threading
 
 SESSION = 'muxnect'
 
@@ -8,13 +10,16 @@ app = sys.argv[1:]
 parent, *_ = app[0].split()
 print(parent)
 
-server = libtmux.Server()
-session = server.new_session(SESSION)
-window = session.new_window(parent)
-session.kill_window('@0')
-pane = window.attached_pane
+try:
+    server = libtmux.Server()
+    session = server.new_session(SESSION)
+    window = session.new_window(parent)
+    session.kill_window('@0')
+    pane = window.attached_pane
+    pane.send_keys(' '.join(app))
 
-pane.send_keys(' '.join(app))
+except TmuxSessionExists:
+    pass
 
 
 app = Flask(__name__)
@@ -46,5 +51,11 @@ def handle_request(window_name):
 
 
 if __name__ == '__main__':
-
-    app.run(host='0.0.0.0', threaded=True, port=6060)
+    web_app_args = {'host':'0.0.0.0', 'threaded':True, 'port':6060}
+    web_app = threading.Thread(target=app.run, kwargs=web_app_args)
+    web_app.start()
+    session.attach_session()
+    try:
+        window.kill_window()
+    except LibTmuxException:
+        pass
