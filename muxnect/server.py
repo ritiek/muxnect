@@ -78,8 +78,6 @@ def command_line():
     detach = args.detach
     cmd = args.cmd
 
-    print(window_name)
-
     try:
         server = libtmux.Server()
         session = server.new_session(session_name)
