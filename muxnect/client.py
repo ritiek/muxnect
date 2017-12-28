@@ -5,7 +5,7 @@ class Client:
         self.default_data = default_data
         self.endpoint = endpoint
 
-    def send(self, keys, data):
+    def send(self, keys, data={}):
         data['keys'] = keys
 
         if isinstance(self.default_data, dict):
