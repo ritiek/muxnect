@@ -1,5 +1,7 @@
 # muxnect
 
+[![Build Status](https://travis-ci.org/ritiek/muxnect.svg?branch=master)](https://travis-ci.org/ritiek/muxnect)
+
 Send input to just about any interactive command-line tool.
 
 muxnect is a tool that invokes tmux to create a session and then
@@ -51,7 +53,7 @@ request to muxnect's server:
 # send return key after it is done sending `keys`
 >>> requests.post(url, data={'keys':keys, 'enter':'true'})
 <Response [200]>
-# send EOF (Ctrl+d) to muxnect
+# send EOF (Ctrl+d) to session
 >>> requests.post(url, data={'keys':'C-d'})
 <Response [200]>
 ```
@@ -88,6 +90,58 @@ running instance of mpv:
 <Response [200]>
 ```
 
-## Why `muxnect` though?
+## Syntactic Sugar
 
-**tmux + connect = muxnect** :heart:
+muxnect also provides a simple API for Python to make POST requests:
+```python
+>>> import muxnect
+>>> url = 'http://localhost:6060/muxnect/cute_cli'
+>>> client = muxnect.Client(url, default_data={'enter':'true'})
+>>> client.send('type this, press enter and kill session', data={'kill':'true'})
+```
+
+## Installation
+
+Install the latest stable release from pip:
+```
+pip install muxnect
+```
+
+Install the latest development version:
+```
+git clone https://github.com/ritiek/muxnect
+cd muxnect
+python setup.py install
+```
+
+## Usage
+
+```
+usage: muxnect [-h] -c CMD -w WINDOW_NAME [-d] [-s SESSION_NAME]
+                 [-b BIND_ADDRESS] [-p PORT]
+
+Send input to just about any interactive command-line tool
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -d, --detach          detach from ongoing session (default: False)
+  -s SESSION_NAME, --session-name SESSION_NAME
+                        tmux's session name (default: muxnect)
+  -b BIND_ADDRESS, --bind-address BIND_ADDRESS
+                        address to bind on, local network: 0.0.0.0 (default:
+                        127.0.0.1)
+  -p PORT, --port PORT  port number to listen on (default: 6060)
+
+required arguments:
+  -c CMD, --cmd CMD     interactive command to send input to (default: None)
+  -w WINDOW_NAME, --window-name WINDOW_NAME
+                        tmux's window name (default: None)
+```
+
+#### Why `muxnect` though?
+
+tmux + connect = muxnect :heart:
+
+## License
+
+[![License](https://img.shields.io/github/license/ritiek/muxnect.svg)](https://github.com/ritiek/muxnect/blob/master/LICENSE)

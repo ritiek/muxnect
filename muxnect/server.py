@@ -6,6 +6,7 @@ from distutils import util
 import sys
 import six
 import threading
+import socket
 import argparse
 import logging
 
@@ -26,6 +27,11 @@ def get_arguments():
         required=True,
         type=str,
         help='interactive command to send input to')
+    required.add_argument(
+        '-w', '--window-name',
+        required=True,
+        type=str,
+        help='tmux\'s window name')
 
     parser.add_argument(
         '-d', '--detach',
@@ -35,10 +41,6 @@ def get_arguments():
         '-s', '--session-name', default='muxnect',
         type=str,
         help='tmux\'s session name')
-    parser.add_argument(
-        '-w', '--window-name', default='mpsyt',
-        type=str,
-        help='tmux\'s window name')
     parser.add_argument(
         '-b', '--bind-address', default='127.0.0.1',
         type=str,
@@ -55,6 +57,19 @@ class TmuxWindowExists(Exception):
     __module__ = Exception.__module__
     def __init__(self, message=None):
         super(TmuxWindowExists, self).__init__(message)
+
+
+def port_is_busy(port):
+    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+
+    try:
+        s.bind(('127.0.0.1', port))
+    except socket.error as e:
+        return e.errno
+    finally:
+        s.close()
+
+    return 0
 
 
 def query_exists(query, data):
@@ -95,6 +110,10 @@ def command_line():
     bind_address = args.bind_address
     port = args.port
 
+    socket_code =  port_is_busy(port)
+    if socket_code:
+        raise OSError('[Errno {}] Cannot start web server on port {}'.format(socket_code, port))
+
     global session
 
     try:
@@ -117,20 +136,19 @@ def command_line():
     pane = window.attached_pane
     pane.send_keys(cmd)
 
+    url = 'http://{0}:{1}/{2}/{3}'.format(bind_address, port, session_name, window_name)
     web_app_args = { 'host'    : bind_address,
                      'port'    : port,
                      'threaded': True }
 
     web_app = threading.Thread(target=app.run, kwargs=web_app_args)
-    # from multiprocessing import Process
-    # web_app = Process(target=app.run, kwargs=web_app_args)
-    url = 'http://{0}:{1}/{2}/{3}'.format(bind_address, port, session_name, window_name)
+
+    web_app.start()
     print('Listening on {}'.format(url))
     print('Press CTRL+C to exit muxnect')
-    web_app.start()
+
     if not detach:
         session.attach_session()
-
 
 
 if __name__ == '__main__':
