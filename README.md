@@ -20,6 +20,7 @@ Let's try using Python:
 >>> import requests
 >>> url = 'http://localhost:6060/muxnect/nice_app'
 >>> requests.post(url, data={'keys': 'wonderful keystrokes'})
+<Response [200]>
 ```
 
 That's it, our web server just sent `wonderful keystrokes`
@@ -49,20 +50,25 @@ request to muxnect's server:
 >>> keys = 'print("Hello World!")'
 # send return key after it is done sending `keys`
 >>> requests.post(url, data={'keys':keys, 'enter':'true'})
+<Response [200]>
+# send EOF (Ctrl+D) to muxnect
+>>> requests.post(url, data={'keys':'C-d'})
+<Response [200]>
 ```
 
-(ofcourse, you can use any good way to make POST requests and not just stay
-limited with using Python to do it)
+(of course, you can use any good way to make POST requests and not just stay
+limited to Python requests)
 
 There's our `Hello World!` on the Python console we launched through muxnect.
 
+We're done. Exit the running tmux session in muxnect with <kbd>Ctrl</kbd>+<kbd>D</kbd>.
+
 ### Control Media Playback
 
-Now, for a real-world example let's try controlling media playback in
-[mpv-player](https://github.com/mpv-player/mpv), which is a pretty
-decent media player.
+For a real-world example, let's try controlling media playback in
+[mpv-player](https://github.com/mpv-player/mpv).
 
-You can install `mpv` from apt if you don't have it installed already.
+You can install `mpv` from apt if you don't have it already.
 
 Let's play some video though mpv using muxnect:
 
@@ -70,13 +76,18 @@ Let's play some video though mpv using muxnect:
 $ muxnect -w playback -c "mpv --loop-file https://github.com/mediaelement/mediaelement-files/raw/master/big_buck_bunny.mp4"
 ```
 
-Hold for the video to show up and now let's send input to this
+Hold for the video to show up and now then send input to this
 running instance of mpv:
 ```python
 >>> import requests
 >>> url = 'http:'//localhost:6060/muxnect/playback'
 # space key pauses the video in mpv by default
 >>> requests.post(url, data={'keys':' '})
-# let's kill this tmux session
+# kill this tmux session
 >>> requests.post(url, data={'kill':'true'})
+<Response [200]>
 ```
+
+## Why `muxnect` though?
+
+**tmux + connect = muxnect** :heart:

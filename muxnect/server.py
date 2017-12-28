@@ -92,6 +92,8 @@ def command_line():
     window_name = args.window_name
     detach = args.detach
     cmd = args.cmd
+    bind_address = args.bind_address
+    port = args.port
 
     global session
 
@@ -115,10 +117,16 @@ def command_line():
     pane = window.attached_pane
     pane.send_keys(cmd)
 
-    web_app_args = {'host':'0.0.0.0', 'threaded':True, 'port':6060}
+    web_app_args = { 'host'    : bind_address,
+                     'port'    : port,
+                     'threaded': True }
+
     web_app = threading.Thread(target=app.run, kwargs=web_app_args)
     #from multiprocessing import Process
     #web_app = Process(target=app.run, kwargs=web_app_args)
+    url = 'http://{0}:{1}/{2}/{3}'.format(bind_address, port, session_name, window_name)
+    print('Listening on {}'.format(url))
+    print('Press CTRL+C to exit muxnect')
     web_app.start()
     if not detach:
         session.attach_session()
