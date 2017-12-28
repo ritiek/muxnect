@@ -90,8 +90,8 @@ Let's play some video though mpv using muxnect:
 
     $ muxnect -w playback -c "mpv --loop-file https://github.com/mediaelement/mediaelement-files/raw/master/big_buck_bunny.mp4"
 
-Hold for the video to show up and now then send input to this running
-instance of mpv:
+Hold on for the video to show up and then we'll send input to this
+running instance of mpv:
 
 .. code:: python
 
