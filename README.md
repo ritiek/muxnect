@@ -1,8 +1,9 @@
 # muxnect
 
+[![Pypi Version](https://img.shields.io/pypi/v/muxnect.svg)](https://pypi.org/project/muxnect/)
 [![Build Status](https://travis-ci.org/ritiek/muxnect.svg?branch=master)](https://travis-ci.org/ritiek/muxnect)
 
-Send input to just about any interactive command-line tool.
+Send input to just about any interactive command-line tool on the local network.
 
 muxnect is a tool that invokes tmux to create a session and then
 wraps around its method of sending mouse-events or key-strokes

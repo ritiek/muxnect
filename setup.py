@@ -19,7 +19,7 @@ setup(name='muxnect',
             ]
       },
       url='https://www.github.com/ritiek/muxnect',
-      keywords=['tmux', 'connect', 'send', 'input', 'command-line', 'interactive'],
+      keywords=['tmux', 'connect', 'send', 'input', 'command-line', 'interactive', 'local', 'network'],
       license='MIT',
       download_url='https://github.com/ritiek/muxnect/archive/v' + muxnect.__version__ + '.tar.gz',
       classifiers=[],

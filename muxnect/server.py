@@ -17,7 +17,7 @@ log.setLevel(logging.ERROR)
 
 def get_arguments():
     parser = argparse.ArgumentParser(
-        description='Send input to just about any interactive command-line tool',
+        description='Send input to just about any interactive command-line tool on the local network',
         formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 
     required = parser.add_argument_group('required arguments')
