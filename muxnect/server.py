@@ -3,11 +3,16 @@ import libtmux
 from libtmux.exc import *
 
 from distutils import util
+import sys
+import six
 import threading
 import argparse
+import logging
 
 
 app = Flask(__name__)
+log = logging.getLogger('werkzeug')
+log.setLevel(logging.ERROR)
 
 def get_arguments():
     parser = argparse.ArgumentParser(
@@ -46,6 +51,12 @@ def get_arguments():
     return parser.parse_args()
 
 
+class TmuxWindowExists(Exception):
+    __module__ = Exception.__module__
+    def __init__(self, message=None):
+        super(TmuxWindowExists, self).__init__(message)
+
+
 def query_exists(query, data):
     if query in data:
         return util.strtobool(data[query])
@@ -61,12 +72,16 @@ def handle_request(window_name):
     suppress_history = query_exists('suppress_history', request.form)
 
     pane = window.attached_pane
-    pane.send_keys(request.form['keys'],
-                   enter=enter,
-                   suppress_history=suppress_history)
+    if 'keys' in request.form:
+        pane.send_keys(request.form['keys'],
+                       enter=enter,
+                       suppress_history=suppress_history)
 
     if query_exists('kill', request.form):
-        window.kill_window()
+        try:
+            window.kill_window()
+        except LibTmuxException:
+            pass
 
     return '200'
 
@@ -78,28 +93,36 @@ def command_line():
     detach = args.detach
     cmd = args.cmd
 
+    global session
+
     try:
         server = libtmux.Server()
-        global session
         session = server.new_session(session_name)
         window = session.new_window(window_name)
         session.kill_window('@0')
-        pane = window.attached_pane
-        pane.send_keys(cmd)
 
     except TmuxSessionExists:
-        pass
+        session = server.find_where({'session_name': session_name})
+
+        if session.find_where({'window_name': window_name}):
+            session.kill_session()
+            message = 'Window named {0} exists in session named {1}'.format(
+                       window_name, session_name)
+            six.raise_from(TmuxWindowExists(message), None)
+
+        window = session.new_window(window_name)
+
+    pane = window.attached_pane
+    pane.send_keys(cmd)
 
     web_app_args = {'host':'0.0.0.0', 'threaded':True, 'port':6060}
     web_app = threading.Thread(target=app.run, kwargs=web_app_args)
+    #from multiprocessing import Process
+    #web_app = Process(target=app.run, kwargs=web_app_args)
     web_app.start()
     if not detach:
         session.attach_session()
 
-    try:
-        window.kill_window()
-    except LibTmuxException:
-        pass
 
 
 if __name__ == '__main__':
