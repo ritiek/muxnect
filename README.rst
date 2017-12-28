@@ -118,7 +118,7 @@ muxnect also provides a simple API for Python to make POST requests:
 Installation
 ------------
 
-You must have ``[tmux](https://github.com/tmux/tmux)`` installed to use
+You must have `tmux <https://github.com/tmux/tmux>`__ installed to use
 this., You may have to install it from source, if it is not present in
 your apt repositories.
 
