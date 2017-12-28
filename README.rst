@@ -119,7 +119,7 @@ Installation
 ------------
 
 You must have `tmux <https://github.com/tmux/tmux>`__ installed to use
-this., You may have to install it from source, if it is not present in
+this. You may have to install it from source, if it is not present in
 your apt repositories.
 
 Install the latest stable release from pypa:
