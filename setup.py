@@ -24,8 +24,8 @@ setup(name='muxnect',
       download_url='https://github.com/ritiek/muxnect/archive/v' + muxnect.__version__ + '.tar.gz',
       classifiers=[],
       install_requires=[
-            'requests'
-            'Flask'
+            'requests',
+            'Flask',
             'libtmux',
       ]
 )
