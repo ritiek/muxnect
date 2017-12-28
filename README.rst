@@ -99,6 +99,7 @@ instance of mpv:
     >>> url = 'http:'//localhost:6060/muxnect/playback'
     # space key pauses the video in mpv by default
     >>> requests.post(url, data={'keys':' '})
+    <Response [200]>
     # kill this tmux session
     >>> requests.post(url, data={'kill':'true'})
     <Response [200]>
