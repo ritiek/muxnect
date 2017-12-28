@@ -162,7 +162,7 @@ Usage
                             tmux's window name (default: None)
 
 Why ``muxnect`` though?
-^^^^^^^^^^^^^^^^^^^^^^^
+-----------------------
 
 tmux + connect = muxnect :heart:
 
