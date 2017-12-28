@@ -51,7 +51,7 @@ request to muxnect's server:
 # send return key after it is done sending `keys`
 >>> requests.post(url, data={'keys':keys, 'enter':'true'})
 <Response [200]>
-# send EOF (Ctrl+D) to muxnect
+# send EOF (Ctrl+d) to muxnect
 >>> requests.post(url, data={'keys':'C-d'})
 <Response [200]>
 ```
@@ -61,7 +61,7 @@ limited to Python requests)
 
 There's our `Hello World!` on the Python console we launched through muxnect.
 
-We're done. Exit the running tmux session in muxnect with <kbd>Ctrl</kbd>+<kbd>D</kbd>.
+We're done. Exit the running tmux session in muxnect with <kbd>Ctrl</kbd>+<kbd>d</kbd>.
 
 ### Control Media Playback
 

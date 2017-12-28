@@ -122,8 +122,8 @@ def command_line():
                      'threaded': True }
 
     web_app = threading.Thread(target=app.run, kwargs=web_app_args)
-    #from multiprocessing import Process
-    #web_app = Process(target=app.run, kwargs=web_app_args)
+    # from multiprocessing import Process
+    # web_app = Process(target=app.run, kwargs=web_app_args)
     url = 'http://{0}:{1}/{2}/{3}'.format(bind_address, port, session_name, window_name)
     print('Listening on {}'.format(url))
     print('Press CTRL+C to exit muxnect')
