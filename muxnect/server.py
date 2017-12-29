@@ -32,7 +32,6 @@ def get_arguments():
         required=True,
         type=str,
         help='tmux\'s window name')
-
     parser.add_argument(
         '-d', '--detach',
         action='store_true',
@@ -98,7 +97,7 @@ def handle_request(window_name):
         except LibTmuxException:
             pass
 
-    return '200'
+    return '', 200
 
 
 def command_line():
@@ -112,7 +111,7 @@ def command_line():
 
     socket_code =  port_is_busy(port)
     if socket_code:
-        raise OSError('[Errno {}] Cannot start web server on port {}'.format(socket_code, port))
+        raise OSError('[Errno {0}] Cannot start web server on port {}'.format(socket_code, port))
 
     global session
 
@@ -121,7 +120,6 @@ def command_line():
         session = server.new_session(session_name)
         window = session.new_window(window_name)
         session.kill_window('@0')
-
     except TmuxSessionExists:
         session = server.find_where({'session_name': session_name})
 
@@ -144,7 +142,7 @@ def command_line():
     web_app = threading.Thread(target=app.run, kwargs=web_app_args)
 
     web_app.start()
-    print('Listening on {}'.format(url))
+    print('Listening on {0}'.format(url))
     print('Press CTRL+C to exit muxnect')
 
     if not detach:
@@ -152,5 +150,4 @@ def command_line():
 
 
 if __name__ == '__main__':
-
     command_line()
