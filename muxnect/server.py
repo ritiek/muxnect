@@ -111,7 +111,7 @@ def command_line():
 
     socket_code = port_is_busy(port)
     if socket_code:
-        raise OSError('[Errno {0}] Cannot start web server on port {}'.format(socket_code, port))
+        raise OSError('[Errno {0}] Cannot start web server on port {1}'.format(socket_code, port))
 
     global session
 
