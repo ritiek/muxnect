@@ -161,6 +161,12 @@ Usage
       -c CMD, --cmd CMD     interactive command to send input to (default: None)
       -w WINDOW_NAME, --window-name WINDOW_NAME
                             tmux's window name (default: None)
+                            
+The URL is generated in the form:
+
+::
+
+    http://<hostaddress>:<port>/<session_name>/<window_name>
 
 Why ``muxnect`` though?
 -----------------------
