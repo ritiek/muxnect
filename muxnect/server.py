@@ -109,7 +109,7 @@ def command_line():
     bind_address = args.bind_address
     port = args.port
 
-    socket_code =  port_is_busy(port)
+    socket_code = port_is_busy(port)
     if socket_code:
         raise OSError('[Errno {0}] Cannot start web server on port {}'.format(socket_code, port))
 
