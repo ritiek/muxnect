@@ -173,6 +173,8 @@ Extending Further
 
 Ever wanted to control that movie running on your laptop but is placed meters away from you? Well, now you can with an android app such as `HTTP-Shortcuts <https://github.com/Waboodoo/HTTP-Shortcuts>`_ (built by `@Waboodoo <https://github.com/Waboodoo>`_) which can be used to create custom HTTP requests.
 
+We'll leave the rest to you :)
+
 Why ``muxnect`` though?
 -----------------------
 
