@@ -96,7 +96,7 @@ running instance of mpv:
 .. code:: python
 
     >>> import requests
-    >>> url = 'http:'//localhost:6060/muxnect/playback'
+    >>> url = 'http://localhost:6060/muxnect/playback'
     # space key pauses the video in mpv by default
     >>> requests.post(url, data={'keys':' '})
     <Response [200]>
