@@ -8,7 +8,7 @@ with open("README.rst", "r") as f:
 
 setup(name='muxnect',
       version=muxnect.__version__,
-      description='Send input to just about any interactive command-line tool',
+      description='Send input to just about any interactive command-line tool through a local web server',
       long_description=long_description,
       author='Ritiek Malhotra',
       author_email='ritiekmalhotra123@gmail.com',
