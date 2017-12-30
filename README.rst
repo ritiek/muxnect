@@ -60,12 +60,9 @@ request to muxnect's server:
 
     >>> import requests
     >>> url = 'http://localhost:6060/muxnect/hello_world'
-    >>> keys = 'print("Hello World!")'
+    >>> hello_world = 'print("Hello World!")'
     # send return key after it is done sending `keys`
-    >>> requests.post(url, data={'keys':keys, 'enter':'true'})
-    <Response [200]>
-    # send EOF (Ctrl+d) to session
-    >>> requests.post(url, data={'keys':'C-d'})
+    >>> requests.post(url, data={'keys':hello_world, 'enter':'true'})
     <Response [200]>
 
 (of course, you can use any good way to make POST requests and not just
@@ -73,6 +70,40 @@ stay limited to Python requests)
 
 There's our ``Hello World!`` on the Python console we launched through
 muxnect.
+
+Now, let's go through the ``separator`` parameter:
+
+.. code:: python
+
+    # send KeyboardInterrupt after sending keys
+    >>> requests.post(url, data={'keys':'send Ctrl+c; C-c', 'separator':'; '})
+    <Response [200]>
+    # separator will split keys to preserve any special keys
+    # here it will send "send Ctrl+c" and then immediately "C-c" (Ctrl+c, KBInterrupt)
+    # you can use any number of separator blocks in `keys` param
+
+    # try similar code without using separators
+    >>> requests.post(url, data={'keys':'no Ctrl+c; C-c'})
+    <Response [200]>
+    # note how it sends raw keys directly
+
+    # send return key and EOF (Ctrl+d) to end our python session
+    >>> requests.post(url, data={'keys':'Enter; C-d', 'separator':'; '})
+    <Response [200]>
+
+Separators are helpful when we need to send a combination of
+raw keys and special keys. Without it, the ``key`` param will be
+interpreted rawly.
+
+From the `tmux official docs <http://man.openbsd.org/OpenBSD-current/man1/tmux.1#KEY_BINDINGS>`__,
+here are all the special keys that may be used:
+
+    tmux allows a command to be bound to most keys, with or without a prefix key.
+    When specifying keys, most represent themselves (for example ‘A’ to ‘Z’).
+    Ctrl keys may be prefixed with ‘C-’ or ‘^’, and Alt (meta) with ‘M-’.
+    In addition, the following special key names are accepted:
+    Up, Down, Left, Right, BSpace, BTab, DC (Delete), End, Enter, Escape,
+    F1 to F12, Home, IC (Insert), NPage/PageDown/PgDn, PPage/PageUp/PgUp, Space, and Tab.
 
 We're done. Exit the running tmux session in muxnect with Ctrl+d.
 
@@ -161,12 +192,22 @@ Usage
       -c CMD, --cmd CMD     interactive command to send input to (default: None)
       -w WINDOW_NAME, --window-name WINDOW_NAME
                             tmux's window name (default: None)
-                            
+
 The URL is generated in the form:
 
 ::
 
     http://<hostaddress>:<port>/<session_name>/<window_name>
+
+The POST request can take the following parameters:
+
+::
+
+    keys - mouse events/keystrokes to send (Default: None)
+    separator - split `keys` parameter on a character or string (Default: None)
+    enter - send enter key immediately after sending `keys` (Default: False)
+    kill - kill tmux window after proceeding with any other params (Default: False)
+
 
 Extending Further
 -----------------

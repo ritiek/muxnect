@@ -84,13 +84,24 @@ def handle_request(window_name):
     window = session.find_where({'window_name': window_name})
 
     enter = query_exists('enter', request.form)
-    suppress_history = query_exists('suppress_history', request.form)
+
+    if 'keys' in request.form:
+        if 'separator' in request.form:
+            keys = request.form['keys'].split(request.form['separator'])
+        else:
+            keys = request.form['keys']
 
     pane = window.attached_pane
-    if 'keys' in request.form:
-        pane.send_keys(request.form['keys'],
+
+    if type(keys) == list:
+        for block in keys:
+            pane.send_keys(block,
+                           enter=enter,
+                           suppress_history=False)
+    else:
+        pane.send_keys(keys,
                        enter=enter,
-                       suppress_history=suppress_history)
+                       suppress_history=False)
 
     if query_exists('kill', request.form):
         try:
