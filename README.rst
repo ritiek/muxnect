@@ -100,7 +100,7 @@ running instance of mpv:
     # space key pauses the video in mpv by default
     >>> requests.post(url, data={'keys':' '})
     <Response [200]>
-    # kill this tmux session
+    # kill this tmux window
     >>> requests.post(url, data={'kill':'true'})
     <Response [200]>
 
