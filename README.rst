@@ -17,7 +17,7 @@ A bare-bones method to muxnect any interactive CLI tool:
 
 .. code:: bash
 
-    $ muxnect -w nice_app -c <some_interactive_tool>
+    $ muxnect -w <tmux_window_name> -c <some_interactive_tool>
 
 Now just nail up some POST requests to
 http://localhost:6060/muxnect/nice\_app:
@@ -27,7 +27,7 @@ Let's try using Python:
 .. code:: python
 
     >>> import requests
-    >>> url = 'http://localhost:6060/muxnect/nice_app'
+    >>> url = 'http://localhost:6060/muxnect/<tmux_window_name>'
     >>> requests.post(url, data={'keys': 'wonderful keystrokes'})
     <Response [200]>
 
