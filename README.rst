@@ -209,6 +209,10 @@ The POST request can take the following parameters:
     enter - send enter key immediately after sending `keys` (Default: False)
     kill - kill tmux window after proceeding with any other params (Default: False)
 
+Security Note
+-------------
+
+Since there is no way to authenticate at the moment, please use this tool only on systems (and local networks) you completely trust. If an attacker somehow gets to know the URL muxnect is listening on, **nothing stops them from running arbitrary shell commands and completely mess you up.** Please take care!
 
 Extending Further
 -----------------
