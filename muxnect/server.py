@@ -79,6 +79,19 @@ def query_exists(query, data):
         return False
 
 
+def send(pane, keys, enter=False):
+    if type(keys) == list:
+        for block in keys:
+            pane.send_keys(block,
+                           enter=enter,
+                           suppress_history=False)
+    else:
+        pane.send_keys(keys,
+                       enter=enter,
+                       suppress_history=False)
+    return pane
+
+
 @app.route('/muxnect/<window_name>', methods=['POST'])
 def handle_request(window_name):
     window = session.find_where({'window_name': window_name})
@@ -92,16 +105,7 @@ def handle_request(window_name):
             keys = request.form['keys']
 
     pane = window.attached_pane
-
-    if type(keys) == list:
-        for block in keys:
-            pane.send_keys(block,
-                           enter=enter,
-                           suppress_history=False)
-    else:
-        pane.send_keys(keys,
-                       enter=enter,
-                       suppress_history=False)
+    send(pane, keys, enter)
 
     if query_exists('kill', request.form):
         try:
@@ -110,6 +114,34 @@ def handle_request(window_name):
             pass
 
     return '200'
+
+
+def fetch_pane(session_name, window_name):
+    try:
+        server = libtmux.Server()
+        session = server.new_session(session_name)
+        window = session.new_window(window_name)
+        session.kill_window('@0')
+
+    except TmuxSessionExists:
+        session = server.find_where({'session_name': session_name})
+        if session.find_where({'window_name': window_name}):
+            session.kill_session()
+            message = 'Window named {0} exists in tmux session named {1}'.format(
+                       window_name, session_name)
+            six.raise_from(TmuxWindowExists(message), None)
+        else:
+            window = session.new_window(window_name)
+
+    return window.attached_pane
+
+
+def web_server(bind_address, port):
+    args = { 'host':     bind_address,
+             'port':     port,
+             'threaded': True }
+    web_app = threading.Thread(target=app.run, kwargs=args)
+    return web_app
 
 
 def command_line():
@@ -125,41 +157,21 @@ def command_line():
     if socket_code:
         raise OSError('[Errno {}] Cannot start web server on port {}'.format(socket_code, port))
 
-    global session
-
-    try:
-        server = libtmux.Server()
-        session = server.new_session(session_name)
-        window = session.new_window(window_name)
-        session.kill_window('@0')
-
-    except TmuxSessionExists:
-        session = server.find_where({'session_name': session_name})
-
-        if session.find_where({'window_name': window_name}):
-            session.kill_session()
-            message = 'Window named {0} exists in session named {1}'.format(
-                       window_name, session_name)
-            six.raise_from(TmuxWindowExists(message), None)
-
-        window = session.new_window(window_name)
-
-    pane = window.attached_pane
+    pane = fetch_pane(session_name, window_name)
     pane.send_keys(cmd)
 
-    url = 'http://{0}:{1}/{2}/{3}'.format(bind_address, port, session_name, window_name)
-    web_app_args = { 'host'    : bind_address,
-                     'port'    : port,
-                     'threaded': True }
+    global session
+    session = pane.session
 
-    web_app = threading.Thread(target=app.run, kwargs=web_app_args)
-
-    web_app.start()
-    print('Listening on {}'.format(url))
-    print('Press CTRL+C to exit muxnect')
+    server = web_server(bind_address, port)
+    server.start()
 
     if not detach:
         session.attach_session()
+
+    url = 'http://{0}:{1}/{2}/{3}'.format(bind_address, port, session_name, window_name)
+    print('Listening on {}'.format(url))
+    print('Press CTRL+C to exit muxnect')
 
 
 if __name__ == '__main__':
