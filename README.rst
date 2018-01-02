@@ -154,13 +154,15 @@ You must have `tmux <https://github.com/tmux/tmux>`__ installed to use
 this. You may have to install it from source, if it ain't in
 your `apt` repositories.
 
+muxnect works best with Python 3.
+
 Install the latest stable release from pypa:
 
 ::
 
     pip install muxnect
 
-Install the latest development version:
+Or install the latest development version:
 
 ::
 
