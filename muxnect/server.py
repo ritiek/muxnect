@@ -120,8 +120,8 @@ def fetch_pane(session_name, window_name):
     try:
         server = libtmux.Server()
         session = server.new_session(session_name)
-        window = session.new_window(window_name)
-        session.kill_window('@0')
+        window = session.attached_window
+        window.rename_window(window_name)
 
     except TmuxSessionExists:
         session = server.find_where({'session_name': session_name})
