@@ -113,7 +113,7 @@ def handle_request(window_name):
         except LibTmuxException:
             pass
 
-    return '200'
+    return ('', 200)
 
 
 def fetch_pane(session_name, window_name):
@@ -155,7 +155,7 @@ def command_line():
 
     socket_code =  port_is_busy(port)
     if socket_code:
-        raise OSError('[Errno {}] Cannot start web server on port {}'.format(socket_code, port))
+        raise OSError('[Errno {0}] Cannot start web server on port {1}'.format(socket_code, port))
 
     pane = fetch_pane(session_name, window_name)
     pane.send_keys(cmd)
@@ -175,5 +175,4 @@ def command_line():
 
 
 if __name__ == '__main__':
-
     command_line()
