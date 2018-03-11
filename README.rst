@@ -160,15 +160,15 @@ Install the latest stable release from pypa:
 
 ::
 
-    pip install muxnect
+    $ pip install muxnect
 
 Or install the latest development version:
 
 ::
 
-    git clone https://github.com/ritiek/muxnect
-    cd muxnect
-    python setup.py install
+    $ git clone https://github.com/ritiek/muxnect
+    $ cd muxnect
+    $ python setup.py install
 
 Usage
 -----
