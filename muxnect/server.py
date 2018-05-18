@@ -96,16 +96,21 @@ def send(pane, keys, enter=False):
 def handle_request(window_name):
     window = session.find_where({'window_name': window_name})
 
-    enter = query_exists('enter', request.form)
-
+    keys = ''
     if 'keys' in request.form:
         if 'separator' in request.form:
             keys = request.form['keys'].split(request.form['separator'])
         else:
             keys = request.form['keys']
 
+    enter = query_exists('enter', request.form)
     pane = window.attached_pane
     send(pane, keys, enter)
+
+    if query_exists('window-title', request.form):
+        text = pane.cmd('display-message', '-p', '#T').stdout[0]
+    else:
+        text = ''
 
     if query_exists('kill', request.form):
         try:
@@ -113,7 +118,7 @@ def handle_request(window_name):
         except LibTmuxException:
             pass
 
-    return ('', 200)
+    return (text, 200)
 
 
 def fetch_pane(session_name, window_name):
@@ -160,6 +165,7 @@ def command_line():
     pane = fetch_pane(session_name, window_name)
     pane.send_keys(cmd)
 
+    # TODO: `session` should not be global
     global session
     session = pane.session
 
