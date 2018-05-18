@@ -107,10 +107,14 @@ def handle_request(window_name):
     pane = window.attached_pane
     send(pane, keys, enter)
 
+    text = tuple()
     if query_exists('window-title', request.form):
-        text = pane.cmd('display-message', '-p', '#T').stdout[0]
-    else:
-        text = ''
+        content = pane.cmd('display-message', '-p', '#T').stdout
+
+    if query_exists('capture-pane', request.form):
+        content = pane.cmd('capture-pane', '-p').stdout
+
+    text = '\n'.join(content)
 
     if query_exists('kill', request.form):
         try:
