@@ -107,7 +107,7 @@ def handle_request(window_name):
     pane = window.attached_pane
     send(pane, keys, enter)
 
-    text = tuple()
+    content = tuple()
     if query_exists('window-title', request.form):
         content = pane.cmd('display-message', '-p', '#T').stdout
 
