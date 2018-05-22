@@ -131,6 +131,27 @@ running instance of mpv:
     # space key pauses the video in mpv by default
     >>> requests.post(url, data={'keys':' '})
     <Response [200]>
+    
+    # capture all visible textual content from the tmux pane
+    >>> response = requests.post(url, data={'capture-pane': True})
+    >>> print(response.text)
+    """
+    me@hostname:~ $  mpv --loop-file https://github.com/mediaelement/mediaelement-files/raw/master/big_buck_bunny.mp4
+    Playing: https://github.com/mediaelement/mediaelement-files/raw/master/big_buck_bunny.mp4
+     (+) Video --vid=1 (*) (h264 640x360 23.962fps)
+     (+) Audio --aid=1 --alang=eng (*) (aac 2ch 22050Hz)
+    AO: [pulse] 22050Hz stereo 2ch float
+    VO: [opengl] 640x360 yuv420p
+    AV: 00:00:38 / 00:01:00 (64%) A-V:  0.000 Cache:  9s+1MB
+    """
+    
+    # fetch this terminal session's window title
+    >>> response = requests.post(url, data={'window-title': True})
+    >>> response.text
+    'me@hostname: ~'
+    # this maybe nice depending if the tool you want to muxnect sets a
+    # a custom title to the pane sesion which could be useful to us
+
     # kill this tmux window
     >>> requests.post(url, data={'kill':'true'})
     <Response [200]>
@@ -209,6 +230,8 @@ The POST request can take the following parameters:
     keys - mouse events/keystrokes to send (Default: None)
     separator - split `keys` parameter on a character or string (Default: None)
     enter - send enter key immediately after sending `keys` (Default: False)
+    window-title - get current window title for the terminal session (Default: False)
+    capture-pane - capture text visible in the current pane (Default: False)
     kill - kill tmux window after proceeding with any other params (Default: False)
 
 Security Note
