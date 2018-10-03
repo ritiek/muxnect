@@ -92,9 +92,9 @@ def send(pane, keys, enter=False):
     return pane
 
 
-@app.route('/muxnect/<window_name>', methods=['POST'])
-def handle_request(window_name):
-    window = session.find_where({'window_name': window_name})
+@app.route('/<_>/<window_name>', methods=['POST'])
+def handle_request(_, window_name):
+    window = SESSION.find_where({'window_name': window_name})
 
     keys = ''
     if 'keys' in request.form:
@@ -128,19 +128,19 @@ def handle_request(window_name):
 def fetch_pane(session_name, window_name):
     try:
         server = libtmux.Server()
-        session = server.new_session(session_name)
-        window = session.attached_window
+        local_session = server.new_session(session_name)
+        window = local_session.attached_window
         window.rename_window(window_name)
 
     except TmuxSessionExists:
-        session = server.find_where({'session_name': session_name})
-        if session.find_where({'window_name': window_name}):
-            session.kill_session()
+        local_session = server.find_where({'session_name': session_name})
+        if local_session.find_where({'window_name': window_name}):
+            local_session.kill_session()
             message = 'Window named {0} exists in tmux session named {1}'.format(
                        window_name, session_name)
             six.raise_from(TmuxWindowExists(message), None)
         else:
-            window = session.new_window(window_name)
+            window = local_session.new_window(window_name)
 
     return window.attached_pane
 
@@ -170,14 +170,14 @@ def command_line():
     pane.send_keys(cmd)
 
     # TODO: `session` should not be global
-    global session
-    session = pane.session
+    global SESSION
+    SESSION = pane.session
 
     server = web_server(bind_address, port)
     server.start()
 
     if not detach:
-        session.attach_session()
+        SESSION.attach_session()
 
     url = 'http://{0}:{1}/{2}/{3}'.format(bind_address, port, session_name, window_name)
     print('Listening on {}'.format(url))
