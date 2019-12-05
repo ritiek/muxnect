@@ -10,6 +10,11 @@ muxnect is a tool that invokes tmux to create a session and then wraps
 around its method of sending mouse-events or key-strokes to the terminal
 through a local web server.
 
+Security Note
+-------------
+
+Since there is no way to authenticate at the moment, please use this tool only on systems (and local networks) you completely trust. If an attacker somehow gets to know the URL muxnect is listening on, **nothing stops them from running arbitrary shell commands and completely mess you up.** Please take care!
+
 Quick Introduction
 ------------------
 
@@ -234,22 +239,11 @@ The POST request can take the following parameters:
     capture-pane - capture text visible in the current pane (Default: False)
     kill - kill tmux window after proceeding with any other params (Default: False)
 
-Security Note
--------------
-
-Since there is no way to authenticate at the moment, please use this tool only on systems (and local networks) you completely trust. If an attacker somehow gets to know the URL muxnect is listening on, **nothing stops them from running arbitrary shell commands and completely mess you up.** Please take care!
-
 Extending Further
 -----------------
 
-Ever wanted to control that movie running on your laptop but is placed meters away from you? Well, now you can with an android app such as `HTTP-Shortcuts <https://github.com/Waboodoo/HTTP-Shortcuts>`_ (built by `@Waboodoo <https://github.com/Waboodoo>`_) which can be used to create custom HTTP requests.
-
-We'll leave the rest to you :)
-
-Why ``muxnect`` though?
------------------------
-
-tmux + connect = muxnect :heart:
+There are some other interesting things you could do, such as the ability to control videos running on your laptop
+which is placed meters away from you - with an android app such as `HTTP-Shortcuts <https://github.com/Waboodoo/HTTP-Shortcuts>`_ (built by `@Waboodoo <https://github.com/Waboodoo>`_) which can be used to create custom HTTP requests.
 
 License
 -------
